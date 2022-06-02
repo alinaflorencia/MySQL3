@@ -1,0 +1,56 @@
+1
+select kodecust, nama from customer
+where kota = 'malang';
+
+2
+select namafasilitas, jeniskamar.harga as harga_kamar from fasilitas, jeniskamar, usefas, dcheckin, kamar 
+where fasilitas.kodefasilitas = usefas.kodefasilitas AND usefas.kodeusefas = dcheckin.kodeusefas AND dcheckin.nokamar = kamar.nokamar 
+AND kamar.kodejenis = jeniskamar.kodejenis AND jeniskamar.harga between 100000 AND 400000
+order by(jeniskamar.harga) ASC;
+
+3
+select kodecust, nama from customer 
+where nama like('y%');
+
+4
+SELECT COUNT(KODECUST) FROM customer
+WHERE KOTA ='malang';
+
+5
+select nama from customer 
+where kodecust IN (select kodecust from hcheckin where month(tglcin) = '08');
+
+6
+select nama from customer 
+where kodecust IN (select kodecust from hcheckin where kodecin IN (select kodecin from dcheckin where kodeusefas IN (select kodeusefas from usefas where kodefasilitas IN (select kodefasilitas from fasilitas where namafasilitas='extra bed'))));
+
+7
+select nokamar, namajenis, harga from kamar, jeniskamar where status ='0' AND kamar.kodejenis = jeniskamar.kodejenis;
+
+8
+select nokamar, namajenis from kamar, jeniskamar where jeniskamar.harga > 200000 AND jeniskamar.kodejenis = kamar.kodejenis AND status ='0';
+
+9
+select nokamar, harga from kamar, jeniskamar where kamar.kodejenis = jeniskamar.kodejenis AND nokamar IN (select nokamar from dcheckin where kodecin IN (select kodecin from hcheckin where kodecust IN (select kodecust from customer where nama LIKE('%yohanes%'))));
+
+10
+select namajenis, count(nokamar) as jumlah_kamar from kamar, jeniskamar where kamar.kodejenis = jeniskamar.kodejenis group by(namajenis);
+
+11
+select customer.nama from customer, hcheckin, dcheckin, kamar, jeniskamar
+where customer.kodecust = hcheckin.kodecust AND
+hcheckin.kodecin = dcheckin.kodecin AND
+dcheckin.nokamar = kamar.nokamar AND
+kamar.kodejenis = jeniskamar.kodejenis AND
+jeniskamar.namajenis = 'standard';
+
+12
+select customer.nama, count(kodecin) as jumlah_checkin from customer, hcheckin
+where hcheckin.kodecust = customer.kodecust group by(customer.nama);
+
+13
+select namajenis, count(dcheckin.nokamar) as jumlah_pernah_disewa from jeniskamar, kamar, dcheckin
+where jeniskamar.kodejenis = kamar.kodejenis AND
+kamar.nokamar = dcheckin.nokamar group by(namajenis);
+
+
